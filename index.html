@@ -455,15 +455,16 @@
             if (Math.abs(guess - substance.meltPoint) <= 1) { 
                 feedbackText.textContent = "Correct! Well done.";
                 feedbackText.className = 'text-center text-sm font-medium h-5 text-green-600';
+                
+                // Reveal answers and disable inputs ONLY if correct
+                answersSection.classList.remove('hidden');
+                meltingPointGuessInput.disabled = true;
+                checkGuessBtn.disabled = true;
             } else {
-                feedbackText.textContent = `Not quite! The correct melting point is ${substance.meltPoint}°C.`;
+                feedbackText.textContent = `Not quite! Try observing the graph and guess again.`;
                 feedbackText.className = 'text-center text-sm font-medium h-5 text-red-600';
+                // We no longer reveal the answer or disable the input here
             }
-            
-            // Reveal answers and disable inputs
-            answersSection.classList.remove('hidden');
-            meltingPointGuessInput.disabled = true;
-            checkGuessBtn.disabled = true;
         }
         
         function simulationTick() {
@@ -624,4 +625,5 @@
     </script>
 </body>
 </html>
+
 
