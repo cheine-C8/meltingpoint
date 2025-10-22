@@ -172,7 +172,7 @@
 
     <!-- Version Number -->
     <div class="text-center text-xs text-gray-400 mt-4">
-        <p>Version 1.4.67</p>
+        <p>Version 1.5.67</p>
     </div>
 
     <script>
@@ -403,17 +403,32 @@
             substance.transitionProgress = 0;
             
              // Define graph scale dynamically
-            const range = substance.boilPoint - substance.meltPoint;
-            let padding = range * 0.2;
-            // Handle cases with very large boiling points like Gallium
-            if (padding > 200) padding = 200; 
+            const range = substance.boilPoint - substance.startTemp;
+            let min, max;
 
-            substance.minScaleTemp = substance.meltPoint - padding; 
-            substance.maxScaleTemp = substance.boilPoint + padding;
-            if (substance.minScaleTemp === substance.maxScaleTemp) { // Avoid division by zero
-                substance.minScaleTemp -= 10;
-                substance.maxScaleTemp += 10;
+            if (range > 1000) {
+                // If boiling point is extreme (like Gallium), focus on melting point
+                const minInterestingPoint = Math.min(substance.startTemp, substance.meltPoint);
+                const maxInterestingPoint = substance.meltPoint;
+                const meltRange = Math.abs(maxInterestingPoint - minInterestingPoint);
+                const padding = Math.max(meltRange * 0.5, 20); // Add 50% padding, or at least 20 degrees
+                min = minInterestingPoint - padding;
+                max = maxInterestingPoint + padding;
+            } else {
+                // Otherwise, show the full range from start to boil
+                const padding = Math.max(range * 0.1, 20); // Add 10% padding, or at least 20 degrees
+                min = substance.startTemp - padding;
+                max = substance.boilPoint + padding;
             }
+
+            // Handle edge case where min and max are the same
+            if (min === max) { 
+                min -= 20;
+                max += 20;
+            }
+
+            substance.minScaleTemp = min;
+            substance.maxScaleTemp = max;
 
             // Reset graph data and scales
             timeData.length = 0;
@@ -425,6 +440,9 @@
                  tempChart.update();
             }
 
+            // Reset slider and heatRate
+            heatSlider.value = 0;
+            heatRate = 0;
 
             // Reset guessing game UI
             answersSection.classList.add('hidden');
@@ -677,6 +695,10 @@
     </script>
 </body>
 </html>
+
+
+
+
 
 
 
