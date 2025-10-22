@@ -71,9 +71,15 @@
                     <label for="substance-selector" class="block text-sm font-medium text-gray-700 mb-1">Select a Substance:</label>
                     <select id="substance-selector" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         <option selected>Water</option>
+                        <option>Acetic Acid</option>
                         <option>Gallium</option>
+                        <option>Phenol</option>
+                        <option>Menthol</option>
+                        <option>Lauric Acid</option>
                         <option>Naphthalene</option>
+                        <option>Sulfur</option>
                         <option>Benzoic Acid</option>
+                        <option>Urea</option>
                     </select>
                 </div>
 
@@ -114,53 +120,15 @@
                 <!-- Status Display -->
                 <div class="text-center space-y-4 py-8">
                     <!-- Visual Display of Substance State -->
-                    <div id="visual-container" class="h-48 flex items-center justify-center relative">
+                    <div id="visual-container" class="h-48 w-full relative border border-gray-300 rounded-lg bg-gray-50">
                         <!-- Temperature Overlay -->
                         <div class="absolute top-0 right-0 bg-white bg-opacity-75 rounded-bl-lg px-2 py-1 z-10">
                             <p id="current-temp" class="text-lg font-bold text-gray-800">-20.0°C</p>
                         </div>
 
-                        <!-- SVG for Solid State -->
-                        <svg id="solid-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <rect x="25" y="50" width="50" height="40" fill="#a7f3d0"/>
-                            <path d="M25 50 L75 90 M25 70 L75 70 M25 90 L75 50 M50 50 V90" fill="none" stroke="#34d399" stroke-width="1"/>
-                        </svg>
+                        <!-- Molecule Canvas -->
+                        <canvas id="molecule-canvas" class="w-full h-full"></canvas>
 
-                        <!-- SVG for Melting State -->
-                        <svg id="melting-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M25 90 H75 V70 C 75 60, 65 60, 60 70 C 55 80, 45 80, 40 70 C 35 60, 25 60, 25 70 Z" fill="#93c5fd" />
-                            <rect x="30" y="50" width="40" height="25" fill="#a7f3d0" opacity="0.8"/>
-                            <path d="M30 50 L70 75 M30 62.5 L70 62.5 M30 75 L70 50" fill="none" stroke="#34d399" stroke-width="1"/>
-                        </svg>
-
-                        <!-- SVG for Liquid State -->
-                        <svg id="liquid-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M25 90 H75 V55 C 75 45, 65 45, 60 55 C 55 65, 45 65, 40 55 C 35 45, 25 45, 25 55 Z" fill="#93c5fd" />
-                        </svg>
-
-                        <!-- SVG for Boiling State -->
-                        <svg id="boiling-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M25 90 H75 V55 C 75 45, 65 45, 60 55 C 55 65, 45 65, 40 55 C 35 45, 25 45, 25 55 Z" fill="#93c5fd" />
-                            <circle cx="35" cy="70" r="3" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="1.5s" repeatCount="indefinite"/></circle>
-                            <circle cx="50" cy="80" r="4" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="1s" repeatCount="indefinite"/></circle>
-                            <circle cx="65" cy="75" r="2.5" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="2s" repeatCount="indefinite"/></circle>
-                        </svg>
-
-                        <!-- SVG for Gas State -->
-                        <svg id="gas-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                            <path d="M30 20 Q 40 10, 50 20 T 70 20" stroke="#9ca3af" stroke-width="2" fill="none" opacity="0.7"><animate attributeName="d" values="M30 20 Q 40 10, 50 20 T 70 20; M30 25 Q 40 15, 50 25 T 70 25; M30 20 Q 40 10, 50 20 T 70 20" dur="2s" repeatCount="indefinite" /></path>
-                            <path d="M35 15 Q 45 5, 55 15 T 75 15" stroke="#9ca3af" stroke-width="2" fill="none" opacity="0.5"><animate attributeName="d" values="M35 15 Q 45 5, 55 15 T 75 15; M35 20 Q 45 10, 55 20 T 75 20; M35 15 Q 45 5, 55 15 T 75 15" dur="1.5s" repeatCount="indefinite" /></path>
-                        </svg>
                     </div>
 
                     <!-- State Display -->
@@ -193,13 +161,21 @@
         const PROGRESS_STEP = 20;    // Percent to move through a phase change per tick at max speed
         const SIMULATION_INTERVAL = 200; // Milliseconds per simulation tick
         const MAX_GRAPH_POINTS = 150; // Max points to show on the graph
+        const NUM_MOLECULES = 30;
+        const MOLECULE_RADIUS = 5;
 
         // --- Substance Database ---
         const compounds = {
             "Water": { name: "Water", meltPoint: 0.0, boilPoint: 100.0, startTemp: -20.0, startState: "Solid" },
+            "Acetic Acid": { name: "Acetic Acid", meltPoint: 16.6, boilPoint: 118.1, startTemp: 10.0, startState: "Solid" },
             "Gallium": { name: "Gallium", meltPoint: 29.8, boilPoint: 2400.0, startTemp: 25.0, startState: "Solid" },
+            "Phenol": { name: "Phenol", meltPoint: 40.5, boilPoint: 181.7, startTemp: 25.0, startState: "Solid" },
+            "Menthol": { name: "Menthol", meltPoint: 42.0, boilPoint: 212.0, startTemp: 25.0, startState: "Solid" },
+            "Lauric Acid": { name: "Lauric Acid", meltPoint: 44.2, boilPoint: 298.9, startTemp: 25.0, startState: "Solid" },
             "Naphthalene": { name: "Naphthalene", meltPoint: 80.2, boilPoint: 218.0, startTemp: 25.0, startState: "Solid" },
-            "Benzoic Acid": { name: "Benzoic Acid", meltPoint: 122.4, boilPoint: 249.0, startTemp: 25.0, startState: "Solid" }
+            "Sulfur": { name: "Sulfur", meltPoint: 115.2, boilPoint: 444.6, startTemp: 25.0, startState: "Solid" },
+            "Benzoic Acid": { name: "Benzoic Acid", meltPoint: 122.4, boilPoint: 249.0, startTemp: 25.0, startState: "Solid" },
+            "Urea": { name: "Urea", meltPoint: 133.0, boilPoint: 135.0, startTemp: 25.0, startState: "Solid" } // Decomposes at 135
         };
 
         // --- State (Mutable) ---
@@ -209,6 +185,8 @@
         let timeData = [];
         let tempData = [];
         let timeStep = 0;
+        let molecules = [];
+        let ctx; // Canvas context
 
         // --- DOM Elements ---
         const substanceSelector = document.getElementById('substance-selector');
@@ -226,19 +204,140 @@
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
         const heatSlider = document.getElementById('heat-slider');
-        // SVG elements
-        const solidSvg = document.getElementById('solid-svg');
-        const meltingSvg = document.getElementById('melting-svg');
-        const liquidSvg = document.getElementById('liquid-svg');
-        const boilingSvg = document.getElementById('boiling-svg');
-        const gasSvg = document.getElementById('gas-svg');
+        const canvasEl = document.getElementById('molecule-canvas');
 
+        // --- Molecule Class ---
+        class Molecule {
+            constructor(x, y, vx, vy) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.solidX = x; // Original lattice position
+                this.solidY = y;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, MOLECULE_RADIUS, 0, Math.PI * 2);
+                ctx.fillStyle = '#4f46e5'; // Indigo color
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
 
         // --- Core Functions ---
 
+        function initializeMolecules() {
+            molecules = [];
+            if (!ctx) return; // Guard clause
+            
+            const canvasWidth = ctx.canvas.width;
+            const canvasHeight = ctx.canvas.height;
+            
+            const gridSpacing = 30;
+            const rows = 5;
+            const cols = NUM_MOLECULES / rows;
+            const startX = (canvasWidth - (cols - 1) * gridSpacing) / 2;
+            const startY = (canvasHeight - (rows - 1) * gridSpacing) / 2 + 20; // Push them down a bit
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    let x = startX + j * gridSpacing;
+                    let y = startY + i * gridSpacing;
+                    molecules.push(new Molecule(x, y, 0, 0));
+                }
+            }
+        }
+        
+        function updateMolecules() {
+            if (!ctx) return;
+            const canvasWidth = ctx.canvas.width;
+            const canvasHeight = ctx.canvas.height;
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            const state = substance.state;
+            
+            let vibrationLimit = 0;
+            let speedLimit = 0;
+            let brownianMotion = 0;
+
+            switch (state) {
+                case "Solid":
+                case "Freezing":
+                    vibrationLimit = 1;
+                    break;
+                case "Melting":
+                    vibrationLimit = 2; // Vibrate more
+                    speedLimit = 0.5; // Start to drift
+                    brownianMotion = 0.1;
+                    break;
+                case "Liquid":
+                case "Condensing":
+                    vibrationLimit = 0; // No lattice
+                    speedLimit = 2;
+                    brownianMotion = 0.5;
+                    break;
+                case "Boiling":
+                    vibrationLimit = 0;
+                    speedLimit = 5;
+                    brownianMotion = 1.5;
+                    break;
+                case "Gas":
+                    vibrationLimit = 0;
+                    speedLimit = 8;
+                    brownianMotion = 2.0;
+                    break;
+            }
+
+            for (let m of molecules) {
+                if (vibrationLimit > 0) {
+                    // Vibrate around solid position
+                    m.vx = 0; m.vy = 0; // Reset drift
+                    m.x = m.solidX + (Math.random() - 0.5) * 2 * vibrationLimit;
+                    m.y = m.solidY + (Math.random() - 0.5) * 2 * vibrationLimit;
+                }
+                
+                if (speedLimit > 0) {
+                    // Add random motion (Brownian)
+                    m.vx += (Math.random() - 0.5) * brownianMotion;
+                    m.vy += (Math.random() - 0.5) * brownianMotion;
+
+                    // Clamp velocity to speed limit
+                    const speed = Math.sqrt(m.vx * m.vx + m.vy * m.vy);
+                    if (speed > speedLimit) {
+                        m.vx = (m.vx / speed) * speedLimit;
+                        m.vy = (m.vy / speed) * speedLimit;
+                    }
+                    
+                    m.x += m.vx;
+                    m.y += m.vy;
+                }
+
+                // Wall collisions
+                if (m.x - MOLECULE_RADIUS < 0) { m.x = MOLECULE_RADIUS; m.vx *= -1; }
+                if (m.x + MOLECULE_RADIUS > canvasWidth) { m.x = canvasWidth - MOLECULE_RADIUS; m.vx *= -1; }
+                if (m.y + MOLECULE_RADIUS > canvasHeight) { m.y = canvasHeight - MOLECULE_RADIUS; m.vy *= -1; } // Bottom wall
+                
+                // Special rule for "Gas" - escape the top
+                if (state === "Gas" && m.y - MOLECULE_RADIUS < 0) {
+                    // Reset molecule at the bottom to simulate "new" molecules boiling up
+                    m.y = canvasHeight - MOLECULE_RADIUS;
+                    m.x = Math.random() * canvasWidth;
+                } else if (state !== "Gas" && m.y - MOLECULE_RADIUS < 0) {
+                    // Top wall collision for non-gas states
+                    m.y = MOLECULE_RADIUS; 
+                    m.vy *= -1;
+                }
+
+                m.draw();
+            }
+        }
+
+
         function initializeChart() {
-            const ctx = document.getElementById('temp-chart').getContext('2d');
-            tempChart = new Chart(ctx, {
+            const chartCtx = document.getElementById('temp-chart').getContext('2d');
+            tempChart = new Chart(chartCtx, {
                 type: 'line',
                 data: {
                     labels: timeData,
@@ -313,7 +412,8 @@
             checkGuessBtn.disabled = false;
             feedbackText.className = 'text-center text-sm font-medium h-5';
 
-
+            // Reset molecules
+            initializeMolecules();
             updateDisplay();
         }
 
@@ -332,31 +432,6 @@
 
             const isTransitioning = ["Melting", "Boiling", "Freezing", "Condensing"].includes(substance.state);
             
-            // Update SVG visibility
-            const allSvgs = [solidSvg, meltingSvg, liquidSvg, boilingSvg, gasSvg];
-            allSvgs.forEach(svg => svg.style.display = 'none');
-
-            switch (substance.state) {
-                case "Solid":
-                    solidSvg.style.display = 'block';
-                    break;
-                case "Melting":
-                case "Freezing": // Use the same visual for both
-                    meltingSvg.style.display = 'block';
-                    break;
-                case "Liquid":
-                case "Condensing": // Use the same visual for both
-                    liquidSvg.style.display = 'block';
-                    break;
-                case "Boiling":
-                    boilingSvg.style.display = 'block';
-                    break;
-                case "Gas":
-                    gasSvg.style.display = 'block';
-                    break;
-            }
-
-
             if (isTransitioning) {
                 progressContainer.classList.remove('hidden');
                 progressBar.style.width = `${substance.transitionProgress}%`;
@@ -392,7 +467,10 @@
         }
         
         function simulationTick() {
-            if (heatRate === 0) return; // Do nothing if slider is neutral
+            if (heatRate === 0) {
+                 updateMolecules(); // Keep vibrating even if no heat change
+                 return;
+            }
 
             const rateFactor = Math.abs(heatRate) / 10; // 0.1 to 1.0
             const effectiveTempStep = MAX_TEMP_STEP * rateFactor;
@@ -512,6 +590,7 @@
                 tempData.shift();
             }
             tempChart.update();
+            updateMolecules();
         }
 
         // --- Event Listeners ---
@@ -533,7 +612,12 @@
         // --- Initial Load & Simulation Start ---
         window.onload = () => {
             initializeChart();
-            changeSubstance("Water"); // Initialize with water
+            // Initialize canvas context and dimensions
+            ctx = canvasEl.getContext('2d');
+            canvasEl.width = canvasEl.offsetWidth;
+            canvasEl.height = canvasEl.offsetHeight;
+
+            changeSubstance("Water"); // Initialize with water, which will call initializeMolecules
             setInterval(simulationTick, SIMULATION_INTERVAL); // Start the simulation loop
         };
 
