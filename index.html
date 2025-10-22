@@ -86,12 +86,27 @@
                 <!-- Guessing Game Section -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
                     <h2 id="substance-name-guess" class="text-xl font-semibold text-indigo-600 text-center">Water</h2>
-                    <label for="melting-point-guess" class="block text-sm font-medium text-gray-700 text-center">What is the melting point?</label>
-                    <div class="flex items-center space-x-2">
-                        <input type="number" id="melting-point-guess" placeholder="Enter temperature in °C" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        <button id="check-guess-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition-colors">Check</button>
+                    
+                    <!-- Melting Point Guess -->
+                    <div class="space-y-1">
+                        <label for="melting-point-guess" class="block text-sm font-medium text-gray-700">What is the melting point?</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" id="melting-point-guess" placeholder="Temp in °C" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <p id="feedback-text" class="text-center text-sm font-medium h-5"></p> <!-- h-5 to prevent layout shift -->
                     </div>
-                    <p id="feedback-text" class="text-center text-sm font-medium h-5"></p> <!-- h-5 to prevent layout shift -->
+
+                    <!-- Boiling Point Guess -->
+                    <div class="space-y-1">
+                        <label for="boiling-point-guess" class="block text-sm font-medium text-gray-700">What is the boiling point?</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" id="boiling-point-guess" placeholder="Temp in °C" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <p id="boiling-feedback-text" class="text-center text-sm font-medium h-5"></p> <!-- h-5 to prevent layout shift -->
+                    </div>
+                    
+                    <button id="check-guesses-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition-colors">Check Guesses</button>
+
                 </div>
 
                 <!-- Substance Info (Answers) -->
@@ -192,8 +207,10 @@
         const substanceSelector = document.getElementById('substance-selector');
         const substanceNameGuess = document.getElementById('substance-name-guess');
         const meltingPointGuessInput = document.getElementById('melting-point-guess');
-        const checkGuessBtn = document.getElementById('check-guess-btn');
+        const boilingPointGuessInput = document.getElementById('boiling-point-guess'); // New
+        const checkGuessesBtn = document.getElementById('check-guesses-btn'); // Renamed
         const feedbackText = document.getElementById('feedback-text');
+        const boilingFeedbackText = document.getElementById('boiling-feedback-text'); // New
         const answersSection = document.getElementById('answers-section');
         const substanceNameAnswer = document.getElementById('substance-name-answer');
         const meltingPointDisplay = document.getElementById('melting-point');
@@ -407,10 +424,14 @@
             // Reset guessing game UI
             answersSection.classList.add('hidden');
             feedbackText.textContent = '';
+            boilingFeedbackText.textContent = ''; // New
             meltingPointGuessInput.value = '';
+            boilingPointGuessInput.value = ''; // New
             meltingPointGuessInput.disabled = false;
-            checkGuessBtn.disabled = false;
+            boilingPointGuessInput.disabled = false; // New
+            checkGuessesBtn.disabled = false; // Renamed
             feedbackText.className = 'text-center text-sm font-medium h-5';
+            boilingFeedbackText.className = 'text-center text-sm font-medium h-5'; // New
 
             // Reset molecules
             initializeMolecules();
@@ -442,28 +463,49 @@
             }
         }
 
-        function checkGuess() {
+        function checkGuesses() { // Renamed function
             const guess = parseFloat(meltingPointGuessInput.value);
+            const boilingGuess = parseFloat(boilingPointGuessInput.value); // New
 
+            let meltingCorrect = false;
+            let boilingCorrect = false;
+
+            // Check Melting Point
             if (isNaN(guess)) {
-                feedbackText.textContent = "Please enter a valid number.";
-                feedbackText.className = 'text-center text-sm font-medium h-5 text-yellow-600';
-                return;
-            }
-
-            // Allow for a small tolerance, e.g., +/- 1 degree for simplicity
-            if (Math.abs(guess - substance.meltPoint) <= 1) { 
+                if (!meltingPointGuessInput.disabled) { // Don't overwrite if already correct
+                    feedbackText.textContent = "Please enter a valid number.";
+                    feedbackText.className = 'text-center text-sm font-medium h-5 text-yellow-600';
+                }
+            } else if (Math.abs(guess - substance.meltPoint) <= 1) { 
                 feedbackText.textContent = "Correct! Well done.";
                 feedbackText.className = 'text-center text-sm font-medium h-5 text-green-600';
-                
-                // Reveal answers and disable inputs ONLY if correct
-                answersSection.classList.remove('hidden');
                 meltingPointGuessInput.disabled = true;
-                checkGuessBtn.disabled = true;
+                meltingCorrect = true;
             } else {
                 feedbackText.textContent = `Not quite! Try observing the graph and guess again.`;
                 feedbackText.className = 'text-center text-sm font-medium h-5 text-red-600';
-                // We no longer reveal the answer or disable the input here
+            }
+
+            // Check Boiling Point
+            if (isNaN(boilingGuess)) {
+                 if (!boilingPointGuessInput.disabled) {
+                    boilingFeedbackText.textContent = "Please enter a valid number.";
+                    boilingFeedbackText.className = 'text-center text-sm font-medium h-5 text-yellow-600';
+                 }
+            } else if (Math.abs(boilingGuess - substance.boilPoint) <= 1) { 
+                boilingFeedbackText.textContent = "Correct! Well done.";
+                boilingFeedbackText.className = 'text-center text-sm font-medium h-5 text-green-600';
+                boilingPointGuessInput.disabled = true;
+                boilingCorrect = true;
+            } else {
+                boilingFeedbackText.textContent = `Not quite! Try observing the graph and guess again.`;
+                boilingFeedbackText.className = 'text-center text-sm font-medium h-5 text-red-600';
+            }
+
+            // Check if both are correct
+            if ((meltingPointGuessInput.disabled && boilingPointGuessInput.disabled) || (meltingCorrect && boilingCorrect)) {
+                answersSection.classList.remove('hidden');
+                checkGuessesBtn.disabled = true;
             }
         }
         
@@ -603,10 +645,15 @@
             changeSubstance(event.target.value);
         });
         
-        checkGuessBtn.addEventListener('click', checkGuess);
+        checkGuessesBtn.addEventListener('click', checkGuesses); // Renamed
         meltingPointGuessInput.addEventListener('keyup', (event) => {
             if (event.key === 'Enter') {
-                checkGuess();
+                checkGuesses(); // Renamed
+            }
+        });
+        boilingPointGuessInput.addEventListener('keyup', (event) => { // New
+            if (event.key === 'Enter') {
+                checkGuesses(); // Renamed
             }
         });
 
@@ -625,5 +672,6 @@
     </script>
 </body>
 </html>
+
 
 
