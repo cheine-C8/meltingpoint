@@ -50,130 +50,142 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen py-8 lg:py-12">
 
-    <div class="w-full max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-6">
+    <!-- Card container: max-w-md on mobile, max-w-4xl on large screens -->
+    <div class="w-full max-w-md lg:max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8">
         
         <!-- Header -->
-        <div class="text-center">
+        <div class="text-center mb-8">
             <h1 class="text-2xl font-bold text-gray-800">Phase Change Simulator</h1>
             <p class="text-gray-500 mt-1">Observe how substances change state with temperature.</p>
         </div>
 
-        <!-- Substance Selector -->
-        <div>
-            <label for="substance-selector" class="block text-sm font-medium text-gray-700 mb-1">Select a Substance:</label>
-            <select id="substance-selector" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                <option selected>Water</option>
-                <option>Gallium</option>
-                <option>Naphthalene</option>
-                <option>Benzoic Acid</option>
-            </select>
-        </div>
+        <!-- Main content grid: 1 col on mobile, 2 cols on large screens -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 space-y-6 lg:space-y-0">
 
-        <!-- Guessing Game Section -->
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
-            <h2 id="substance-name-guess" class="text-xl font-semibold text-indigo-600 text-center">Water</h2>
-             <label for="melting-point-guess" class="block text-sm font-medium text-gray-700 text-center">What is the melting point?</label>
-            <div class="flex items-center space-x-2">
-                <input type="number" id="melting-point-guess" placeholder="Enter temperature in °C" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                <button id="check-guess-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition-colors">Check</button>
-            </div>
-            <p id="feedback-text" class="text-center text-sm font-medium h-5"></p> <!-- h-5 to prevent layout shift -->
-        </div>
-
-        <!-- Substance Info (Answers) -->
-        <div id="answers-section" class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center hidden">
-            <h2 id="substance-name-answer" class="text-xl font-semibold text-indigo-600">Water</h2>
-            <div class="flex justify-around mt-2 text-sm text-gray-600">
-                <p>Melting Point: <span id="melting-point" class="font-medium">0°C</span></p>
-                <p>Boiling Point: <span id="boiling-point" class="font-medium">100°C</span></p>
-            </div>
-        </div>
-
-        <!-- Status Display -->
-        <div class="text-center space-y-4 py-8">
-            <!-- Visual Display of Substance State -->
-            <div id="visual-container" class="h-48 flex items-center justify-center relative">
-                 <!-- Temperature Overlay -->
-                 <div class="absolute top-0 right-0 bg-white bg-opacity-75 rounded-bl-lg px-2 py-1 z-10">
-                    <p id="current-temp" class="text-lg font-bold text-gray-800">-20.0°C</p>
+            <!-- Left Column (Controls & Info) -->
+            <div class="space-y-6">
+                <!-- Substance Selector -->
+                <div>
+                    <label for="substance-selector" class="block text-sm font-medium text-gray-700 mb-1">Select a Substance:</label>
+                    <select id="substance-selector" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option selected>Water</option>
+                        <option>Gallium</option>
+                        <option>Naphthalene</option>
+                        <option>Benzoic Acid</option>
+                    </select>
                 </div>
 
-                <!-- SVG for Solid State -->
-                <svg id="solid-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <rect x="25" y="50" width="50" height="40" fill="#a7f3d0"/>
-                    <path d="M25 50 L75 90 M25 70 L75 70 M25 90 L75 50 M50 50 V90" fill="none" stroke="#34d399" stroke-width="1"/>
-                </svg>
+                <!-- Guessing Game Section -->
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
+                    <h2 id="substance-name-guess" class="text-xl font-semibold text-indigo-600 text-center">Water</h2>
+                    <label for="melting-point-guess" class="block text-sm font-medium text-gray-700 text-center">What is the melting point?</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="melting-point-guess" placeholder="Enter temperature in °C" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <button id="check-guess-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition-colors">Check</button>
+                    </div>
+                    <p id="feedback-text" class="text-center text-sm font-medium h-5"></p> <!-- h-5 to prevent layout shift -->
+                </div>
 
-                <!-- SVG for Melting State -->
-                <svg id="melting-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <path d="M25 90 H75 V70 C 75 60, 65 60, 60 70 C 55 80, 45 80, 40 70 C 35 60, 25 60, 25 70 Z" fill="#93c5fd" />
-                    <rect x="30" y="50" width="40" height="25" fill="#a7f3d0" opacity="0.8"/>
-                    <path d="M30 50 L70 75 M30 62.5 L70 62.5 M30 75 L70 50" fill="none" stroke="#34d399" stroke-width="1"/>
-                </svg>
+                <!-- Substance Info (Answers) -->
+                <div id="answers-section" class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center hidden">
+                    <h2 id="substance-name-answer" class="text-xl font-semibold text-indigo-600">Water</h2>
+                    <div class="flex justify-around mt-2 text-sm text-gray-600">
+                        <p>Melting Point: <span id="melting-point" class="font-medium">0°C</span></p>
+                        <p>Boiling Point: <span id="boiling-point" class="font-medium">100°C</span></p>
+                    </div>
+                </div>
 
-                <!-- SVG for Liquid State -->
-                <svg id="liquid-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <path d="M25 90 H75 V55 C 75 45, 65 45, 60 55 C 55 65, 45 65, 40 55 C 35 45, 25 45, 25 55 Z" fill="#93c5fd" />
-                </svg>
-
-                <!-- SVG for Boiling State -->
-                <svg id="boiling-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                    <path d="M25 90 H75 V55 C 75 45, 65 45, 60 55 C 55 65, 45 65, 40 55 C 35 45, 25 45, 25 55 Z" fill="#93c5fd" />
-                    <circle cx="35" cy="70" r="3" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="1.5s" repeatCount="indefinite"/></circle>
-                    <circle cx="50" cy="80" r="4" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="1s" repeatCount="indefinite"/></circle>
-                    <circle cx="65" cy="75" r="2.5" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="2s" repeatCount="indefinite"/></circle>
-                </svg>
-
-                <!-- SVG for Gas State -->
-                <svg id="gas-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                     <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
-                     <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
-                     <path d="M30 20 Q 40 10, 50 20 T 70 20" stroke="#9ca3af" stroke-width="2" fill="none" opacity="0.7"><animate attributeName="d" values="M30 20 Q 40 10, 50 20 T 70 20; M30 25 Q 40 15, 50 25 T 70 25; M30 20 Q 40 10, 50 20 T 70 20" dur="2s" repeatCount="indefinite" /></path>
-                     <path d="M35 15 Q 45 5, 55 15 T 75 15" stroke="#9ca3af" stroke-width="2" fill="none" opacity="0.5"><animate attributeName="d" values="M35 15 Q 45 5, 55 15 T 75 15; M35 20 Q 45 10, 55 20 T 75 20; M35 15 Q 45 5, 55 15 T 75 15" dur="1.5s" repeatCount="indefinite" /></path>
-                </svg>
+                <!-- Controls -->
+                <div class="pt-4 space-y-3">
+                    <label for="heat-slider" class="block text-sm font-medium text-gray-700 text-center">Heating & Cooling Control</label>
+                    <input id="heat-slider" type="range" min="-10" max="10" value="0" step="1">
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>Max Cool</span>
+                        <span class="font-semibold">Neutral</span>
+                        <span>Max Heat</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- State Display -->
-            <div>
-                <p class="text-sm text-gray-500 uppercase tracking-wider">Current State</p>
-                <p id="current-state" class="text-2xl font-semibold text-indigo-700 capitalize">Solid</p>
-            </div>
-        </div>
-        
-        <!-- Graph Section -->
-        <div class="border border-gray-200 rounded-lg p-4">
-             <canvas id="temp-chart"></canvas>
-        </div>
+            <!-- Right Column (Visuals & Graph) -->
+            <div class="space-y-6">
+                <!-- Status Display -->
+                <div class="text-center space-y-4 py-8">
+                    <!-- Visual Display of Substance State -->
+                    <div id="visual-container" class="h-48 flex items-center justify-center relative">
+                        <!-- Temperature Overlay -->
+                        <div class="absolute top-0 right-0 bg-white bg-opacity-75 rounded-bl-lg px-2 py-1 z-10">
+                            <p id="current-temp" class="text-lg font-bold text-gray-800">-20.0°C</p>
+                        </div>
 
+                        <!-- SVG for Solid State -->
+                        <svg id="solid-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <rect x="25" y="50" width="50" height="40" fill="#a7f3d0"/>
+                            <path d="M25 50 L75 90 M25 70 L75 70 M25 90 L75 50 M50 50 V90" fill="none" stroke="#34d399" stroke-width="1"/>
+                        </svg>
 
-        <!-- Progress Bar for Phase Change -->
-        <div id="progress-container" class="h-8 w-full bg-gray-200 rounded-full hidden">
-            <div id="progress-bar" class="progress-bar-inner h-full bg-indigo-500 rounded-full text-white text-xs font-medium flex items-center justify-center" style="width: 0%;">
-                <span id="progress-text">Melting (0%)</span>
-            </div>
-        </div>
-        
-        <!-- Controls -->
-        <div class="pt-4 space-y-3">
-            <label for="heat-slider" class="block text-sm font-medium text-gray-700 text-center">Heating & Cooling Control</label>
-            <input id="heat-slider" type="range" min="-10" max="10" value="0" step="1">
-            <div class="flex justify-between text-xs text-gray-500">
-                <span>Max Cool</span>
-                <span class="font-semibold">Neutral</span>
-                <span>Max Heat</span>
-            </div>
-        </div>
-    </div>
+                        <!-- SVG for Melting State -->
+                        <svg id="melting-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M25 90 H75 V70 C 75 60, 65 60, 60 70 C 55 80, 45 80, 40 70 C 35 60, 25 60, 25 70 Z" fill="#93c5fd" />
+                            <rect x="30" y="50" width="40" height="25" fill="#a7f3d0" opacity="0.8"/>
+                            <path d="M30 50 L70 75 M30 62.5 L70 62.5 M30 75 L70 50" fill="none" stroke="#34d399" stroke-width="1"/>
+                        </svg>
+
+                        <!-- SVG for Liquid State -->
+                        <svg id="liquid-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M25 90 H75 V55 C 75 45, 65 45, 60 55 C 55 65, 45 65, 40 55 C 35 45, 25 45, 25 55 Z" fill="#93c5fd" />
+                        </svg>
+
+                        <!-- SVG for Boiling State -->
+                        <svg id="boiling-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M25 90 H75 V55 C 75 45, 65 45, 60 55 C 55 65, 45 65, 40 55 C 35 45, 25 45, 25 55 Z" fill="#93c5fd" />
+                            <circle cx="35" cy="70" r="3" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="1.5s" repeatCount="indefinite"/></circle>
+                            <circle cx="50" cy="80" r="4" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="1s" repeatCount="indefinite"/></circle>
+                            <circle cx="65" cy="75" r="2.5" fill="white" opacity="0.8"><animate attributeName="cy" values="90;40" dur="2s" repeatCount="indefinite"/></circle>
+                        </svg>
+
+                        <!-- SVG for Gas State -->
+                        <svg id="gas-svg" class="w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M20 95 V30 H80 V95 Z" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M20 30 C 20 20, 80 20, 80 30" fill="none" stroke="#4b5563" stroke-width="2"/>
+                            <path d="M30 20 Q 40 10, 50 20 T 70 20" stroke="#9ca3af" stroke-width="2" fill="none" opacity="0.7"><animate attributeName="d" values="M30 20 Q 40 10, 50 20 T 70 20; M30 25 Q 40 15, 50 25 T 70 25; M30 20 Q 40 10, 50 20 T 70 20" dur="2s" repeatCount="indefinite" /></path>
+                            <path d="M35 15 Q 45 5, 55 15 T 75 15" stroke="#9ca3af" stroke-width="2" fill="none" opacity="0.5"><animate attributeName="d" values="M35 15 Q 45 5, 55 15 T 75 15; M35 20 Q 45 10, 55 20 T 75 20; M35 15 Q 45 5, 55 15 T 75 15" dur="1.5s" repeatCount="indefinite" /></path>
+                        </svg>
+                    </div>
+
+                    <!-- State Display -->
+                    <div>
+                        <p class="text-sm text-gray-500 uppercase tracking-wider">Current State</p>
+                        <p id="current-state" class="text-2xl font-semibold text-indigo-700 capitalize">Solid</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar for Phase Change -->
+                <div id="progress-container" class="h-8 w-full bg-gray-200 rounded-full hidden">
+                    <div id="progress-bar" class="progress-bar-inner h-full bg-indigo-500 rounded-full text-white text-xs font-medium flex items-center justify-center" style="width: 0%;">
+                        <span id="progress-text">Melting (0%)</span>
+                    </div>
+                </div>
+
+                <!-- Graph Section -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <canvas id="temp-chart"></canvas>
+                </div>
+            </div> <!-- End Right Column -->
+
+        </div> <!-- End Grid -->
+
+    </div> <!-- End Card -->
 
     <script>
         // --- Simulation Constants ---
@@ -256,7 +268,8 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: { enabled: false }
-                    }
+                    },
+                    maintainAspectRatio: false
                 }
             });
         }
@@ -527,5 +540,4 @@
     </script>
 </body>
 </html>
-
 
