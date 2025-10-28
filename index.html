@@ -80,6 +80,7 @@
                         <option>Sulfur</option>
                         <option>Benzoic Acid</option>
                         <option>Urea</option>
+                        <option>DMSO</option>
                     </select>
                 </div>
 
@@ -127,6 +128,7 @@
                         <span class="font-semibold">Neutral</span>
                         <span>Max Heat</span>
                     </div>
+                    <button id="pause-btn" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-md transition-colors">Pause</button>
                 </div>
             </div>
 
@@ -170,7 +172,7 @@
 
         <!-- Version Number -->
         <div class="text-center text-xs text-gray-400 mt-4">
-            <p>Version 1.6.67</p>
+            <p>Version 1.7.67</p>
         </div>
 
     </div> <!-- End Card -->
@@ -196,12 +198,14 @@
             "Naphthalene": { name: "Naphthalene", meltPoint: 80.2, boilPoint: 218.0, startTemp: 25.0, startState: "Solid" },
             "Sulfur": { name: "Sulfur", meltPoint: 115.2, boilPoint: 444.6, startTemp: 25.0, startState: "Solid" },
             "Benzoic Acid": { name: "Benzoic Acid", meltPoint: 122.4, boilPoint: 249.0, startTemp: 25.0, startState: "Solid" },
-            "Urea": { name: "Urea", meltPoint: 133.0, boilPoint: 135.0, startTemp: 25.0, startState: "Solid" } // Decomposes at 135
+            "Urea": { name: "Urea", meltPoint: 133.0, boilPoint: 135.0, startTemp: 25.0, startState: "Solid" }, // Decomposes at 135
+            "DMSO": { name: "DMSO", meltPoint: 18.5, boilPoint: 189.0, startTemp: 10.0, startState: "Solid" }
         };
 
         // --- State (Mutable) ---
         let substance = { ...compounds["Water"] }; // Start with Water
         let heatRate = 0; // -10 (max cool) to 10 (max heat)
+        let isPaused = false; // New
         let tempChart;
         let timeData = [];
         let tempData = [];
@@ -228,6 +232,7 @@
         const progressText = document.getElementById('progress-text');
         const heatSlider = document.getElementById('heat-slider');
         const canvasEl = document.getElementById('molecule-canvas');
+        const pauseBtn = document.getElementById('pause-btn'); // New
 
         // --- Molecule Class ---
         class Molecule {
@@ -445,6 +450,15 @@
             heatSlider.value = 0;
             heatRate = 0;
 
+            // Reset pause button
+            isPaused = false;
+            if (pauseBtn) { // Check if pauseBtn exists
+                pauseBtn.textContent = 'Pause';
+                pauseBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+                pauseBtn.classList.add('bg-indigo-500', 'hover:bg-indigo-600');
+            }
+
+
             // Reset guessing game UI
             answersSection.classList.add('hidden');
             feedbackText.textContent = '';
@@ -534,6 +548,8 @@
         }
         
         function simulationTick() {
+            if (isPaused) return; // New: Stop all simulation logic if paused
+
             if (heatRate === 0) {
                  updateMolecules(); // Keep vibrating even if no heat change
                  return;
@@ -669,6 +685,19 @@
             changeSubstance(event.target.value);
         });
         
+        pauseBtn.addEventListener('click', () => { // New
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseBtn.textContent = 'Resume';
+                pauseBtn.classList.remove('bg-indigo-500', 'hover:bg-indigo-600');
+                pauseBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+            } else {
+                pauseBtn.textContent = 'Pause';
+                pauseBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+                pauseBtn.classList.add('bg-indigo-500', 'hover:bg-indigo-600');
+            }
+        });
+
         checkGuessesBtn.addEventListener('click', checkGuesses); // Renamed
         meltingPointGuessInput.addEventListener('keyup', (event) => {
             if (event.key === 'Enter') {
@@ -696,4 +725,6 @@
     </script>
 </body>
 </html>
+
+
 
